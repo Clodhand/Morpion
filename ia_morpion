@@ -1,0 +1,54 @@
+import random
+
+def joueur_humain(grille, symbole):
+    while True:
+        try:
+            entree = input(f"Joueur {symbole}, entrez la coordonnée (lig, col, ex: 0,1): ")
+            print(f"Saisie brute : '{entree}'")
+            entree = entree.strip().replace(" ", "").replace(";", ",")
+            if "," not in entree:
+                print("Erreur: la saisie doit contenir une virgule (ex: 0,1).")
+                continue
+            lig, col = map(int, entree.split(","))
+            if 0 <= lig <= 2 and 0 <= col <= 2 and grille[lig][col] == " ":
+                return lig, col
+            else:
+                print("Coordonnée invalide ou case occupé. Réessayez !")
+        except (ValueError, IndexError):
+            print("Format invalide. Entrez deux nombres séparés par une virgule (ex: 0,1).")
+
+
+def ia_aleatoire(grille, symbole):
+    cases_libres = [(lig, col) for lig in range(3) for col in range(3) if grille[lig][col] == " "]
+    return random.choice(cases_libres)
+    """ Même que la ligne au dessus mais en moins condensé"""
+    # cases_libre = []
+    # for lig in range(3):
+    #     for col in range(3):
+    #         if grille[lig][col]  == " ":
+    #             cases_libre.append((lig,col))
+    #
+    # return random.choice(cases_libre)
+
+#TODO : fonction IA defensive
+
+
+#def ia_defensive(grille):
+
+if __name__=="__main__":
+    #grille de test
+    grille_test = [["x", "o", " "],[" ", "x", " "],["o", " ", " "]]
+
+
+    # Affichage de la grille de test
+    def affichage_grille(grille_test):
+        for row in grille_test:
+            print(" | ".join(row))
+            print("-" * 9)
+
+    affichage_grille(grille_test)
+
+    print("\nL' IA choisit:")
+    for i in range(5):
+        choix = ia_aleatoire(grille_test)
+        print(f"Tentative {i+1}: ligne {choix[0]}, colonne {choix[1]}")
