@@ -1,0 +1,46 @@
+from Morpion import jouer_partie
+from ia_morpion import joueur_humain, ia_aleatoire
+
+
+# Menu principal
+
+joueurs_disponibles = {
+    "Humain": joueur_humain,
+    "IA aléatoire": ia_aleatoire,
+    #autre ia...
+}
+def main():
+    print("Bienvenue au jeu du Morpion !")
+    while True:
+        print("\nJoueurs disponibles :")
+        for i, nom in enumerate(joueurs_disponibles.keys(), 1):
+            print(f"{i}. {nom}")
+        try:
+            choix1 = int(input("Choisissez le joueur 1 (entrez le numero) : ")) - 1
+            choix2 = int(input("Choisissez le joueur 2 (entrez le numero) : ")) -1
+            if 0 <= choix1 < len(joueurs_disponibles) and 0 <= choix2 < len(joueurs_disponibles):
+                joueur1_nom = list(joueurs_disponibles.keys())[choix1]
+                joueur2_nom = list(joueurs_disponibles.keys())[choix2]
+                joueur1_func = list(joueurs_disponibles.values())[choix1]
+                joueur2_func = list(joueurs_disponibles.values())[choix2]
+                nb_parties = int(input("Entrez le nombre parties : "))
+                print(f"\nMatch : {joueur1_nom} (x) vs {joueur2_nom} (o)")
+                jouer_partie(nb_parties, joueur1_func, joueur2_func)
+            else:
+                print("Choix invalide. Réessayez.")
+        except ValueError:
+            print("Entrez des nombres valides !")
+        continuer = input("Voulez-vous jouer un autre match ? (oui/non) : ")
+        if continuer != "oui":
+            break
+
+if __name__ == "__main__":
+    main()
+
+# print("4. IA Aléatoire vs IA Offensive")
+# print("5. IA Offensive vs IA Offensive")
+#print("6. IA Offensive vs IA Defensive")
+# print("7. IA Defensive vs IA Defensive")
+# print("8. IA defensive vs IA Minimax")
+# print("9. IA Minimax vs Minimax")
+
