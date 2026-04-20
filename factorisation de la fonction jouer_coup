@@ -1,0 +1,206 @@
+from ia_morpion import ia_aleatoire, joueur_humain
+
+
+# Test des conditions de Victoire
+def condition_victoire(ma_grille) :
+# Test de ligne gagnante
+    for ligne in ma_grille:
+        if ligne[0] == ligne[1] == ligne[2] != " ":
+            return True, ligne[0], False # Victoire ligne
+# Test de colonne gagnante
+    for col in range(3):
+        if ma_grille[0][col] == ma_grille[1][col] == ma_grille[2][col] != " ":
+            return True, ma_grille[0][col], False # Victoire colonne
+# Test des diagonales gagnantes
+    if (ma_grille[0][0] == ma_grille[1][1] == ma_grille[2][2] != " ") or \
+        (ma_grille[2][0] == ma_grille[1][1] == ma_grille[0][2] != " "):
+            return True, ma_grille[1][1], False # Victoire diagonale
+# Pas de victoire  - Vérification match nul
+    if sum(row.count(" ") for row in ma_grille) == 0:
+        return False, None, True # Nul
+    return False, None, False # En cours
+
+# Affichage de la grille
+def affichage_grille(ma_grille):
+    for row in ma_grille:
+        print(" | ".join(row))
+        print("-" * 9)
+
+def jouer_partie(nb_parties, joueur1_func, joueur2_func, symbole1="x", symbole2="o"):
+    # Compteur à zero
+    victoire_joueur1 = 0
+    victoire_joueur2 = 0
+    parties_nuls = 0
+    # Boucle du nombre de partie
+    for i in range(nb_parties):
+        print(f"Partie {i + 1}")
+        # Création de la grille
+        grille = [[" " for i in range(3)] for t in range(3)]
+        # Boucle tour de jeu
+        for tour in range(9):
+            # Déterminer le joueur courant
+            if tour % 2 == 0:
+                joueur_courant = joueur1_func
+                symbole = symbole1
+            else:
+                joueur_courant = joueur2_func
+                symbole = symbole2
+            # Afficher la grille avant le coup si le joueur est humain
+            if joueur_courant == joueur_humain:
+                affichage_grille(grille)
+            # Obtenir le coup
+            coor = joueur_courant(grille, symbole)
+            grille[coor[0]][coor[1]] = symbole
+            # Afficher la grille après chaque coup
+            affichage_grille(grille)
+            est_gagne, joueur, est_nul = condition_victoire(grille)
+            print(f"Tour {tour}, est_gagne={est_gagne}, joueur={joueur}, est_nul={est_nul}")
+            if est_gagne:
+                if joueur == symbole1:
+                    victoire_joueur1 += 1
+                    print(f"victoire joueur1 ({symbole1}) {victoire_joueur1}")
+                else:
+                    victoire_joueur2 += 1
+                    print(f"victoire joueur2 ({symbole2}) {victoire_joueur2}")
+                break
+            elif est_nul:
+                parties_nuls += 1
+                print(f"Match nul détecté !!! parties nuls= {parties_nuls}")
+                print("grille final : ")
+                affichage_grille(grille)
+                break
+            print(f"Fin de partie {i + 1}: victoire_joueur1={victoire_joueur1}, victoire_joueur2={victoire_joueur2}, parties_nuls={parties_nuls}")
+        print("\nRésultats finaux :")
+        print(f"Victoires Joueur1 ({symbole1}): {victoire_joueur1}")
+        print(f"Victoires Joueur2 ({symbole2}): {victoire_joueur2}")
+        print(f"Matchs nuls : {parties_nuls}")
+    return victoire_joueur1, victoire_joueur2, parties_nuls
+
+
+
+
+
+
+
+
+
+
+
+# #Initialisation du jeu
+# def init_jeu():
+#     grille = [[" " for l in range(3)] for c in range(3)]
+#     joueur_a = str(input("Joueur A Choisissez votre symbole ? x ou o ?")).lower()
+#     while (joueur_a != "x") and (joueur_a != "o"):
+#         joueur_a = str(input("Entrez x ou o !"))
+#
+#     if joueur_a == "x":
+#         joueur_b = "o"
+#     else:
+#         joueur_b = "x"
+#     return joueur_a, joueur_b, grille
+
+
+
+
+
+
+
+# def jouer_coup(symbole_actuel, ma_grille):
+#     while True:  # Boucle jusqu'à trouver une case libre
+#         coor_y = int(input(f"joueur {symbole_actuel}, Quelle ligne ? (0,1,2)"))
+#         while coor_y < 0 or coor_y > 2:
+#             coor_y = int(input(f"joueur {symbole_actuel}, quelle ligne ? entrez uniquement les valeurs 0 ou 1 ou 2 !"))
+#         coor_x = int(input(f"joueur {symbole_actuel}, Quelle colonne ? (0,1,2)"))
+#         while coor_x < 0 or coor_x > 2:
+#             coor_x = int(input(f"Joueur {symbole_actuel}, Quelle colonne ? entrez uniquement les valeurs 0 ou 1 ou 2 !"))
+#         # Vérifier si la case est libre
+#         if ma_grille[coor_y][coor_x] == " ":
+#             break  # Case libre, on sort de la boucle !
+#         else:
+#             print("Cette case est déjà prise ! Choisissez une autre case.")
+#     ma_grille[coor_y][coor_x] = symbole_actuel
+#     affichage_grille(ma_grille)
+
+
+
+
+
+# # Boucle du jeu
+#
+# def jouer_partie_humain_vs_humain():
+#     mon_joueur_a, mon_joueur_b, ma_grille = init_jeu()
+#     print(mon_joueur_a) # Debug
+#     affichage_grille(ma_grille)
+#     for tour in range(9):
+#         if tour % 2 == 0:
+#             jouer_coup(mon_joueur_a, ma_grille)
+#         else:
+#             jouer_coup(mon_joueur_b, ma_grille)
+#
+#         est_gagne, joueur, est_nul = condition_victoire(ma_grille)
+#         if est_gagne:
+#             print(f"Le joueur {joueur} a gagné !")
+#             break
+#         elif est_nul:
+#             print("Match nul")
+#             break
+
+# def jouer_partie_humain_vs_IA_aleatoire():
+#     mon_joueur_a, mon_joueur_b, ma_grille = init_jeu()
+#     affichage_grille(ma_grille)
+#     for tour in range(9):
+#         if tour % 2 == 0:
+#             jouer_coup(mon_joueur_a, ma_grille)
+#         else:
+#             print("C'est le tour de l'IA")
+#             coor_choisi_ia = ia_aleatoire(ma_grille)
+#             ma_grille[coor_choisi_ia[0]][coor_choisi_ia[1]] = mon_joueur_b
+#             affichage_grille(ma_grille)
+
+        # est_gagne, joueur, est_nul = condition_victoire(ma_grille)
+        # if est_gagne:
+        #     print(f"Le joueur {joueur} a gagné !")
+        #     break
+        # elif est_nul:
+        #     print("Match nul")
+        #     break
+
+# def jouer_partie_ia_ale_vs_ia_ale(nb_partie):
+#     mon_joueur_a = "x"
+#     mon_joueur_b = "o"
+#     victoire_ia1 = 0
+#     victoire_ia2 = 0
+#     parties_nuls = 0
+#     for i in range(nb_partie):
+#         print(f"Partie {i + 1}")
+#         ma_grille = [[" " for l in range(3)] for c in range(3)]
+#         for tour in range(9):
+#             if tour %2 == 0:
+#                 coor_choisi_ia = ia_aleatoire(ma_grille)
+#                 ma_grille[coor_choisi_ia[0]][coor_choisi_ia[1]] = mon_joueur_a
+#             else:
+#                 coor_choisi_ia = ia_aleatoire(ma_grille)
+#                 ma_grille[coor_choisi_ia[0]][coor_choisi_ia[1]] = mon_joueur_b
+#             #affichage_grille(ma_grille)
+#             est_gagne, joueur, est_nul = condition_victoire(ma_grille)
+#             #print(f"Tour {tour}, est_gagne={est_gagne}, joueur={joueur}, est_nul={est_nul}")
+#             if est_gagne:
+#                     if joueur == mon_joueur_a:
+#                         victoire_ia1 += 1
+#                         print(f"victoire ia1 {victoire_ia1}")
+#                     else:
+#                         victoire_ia2 += 1
+#                         print(f"victoire ia2 {victoire_ia2}")
+#                     break
+#             elif est_nul:
+#                     parties_nuls += 1
+#                     print(f"Match nul détecté !!! parties nuls= {parties_nuls}")
+#                     print("grille final : ")
+#                     #affichage_grille(ma_grille)
+#                     break
+#         print(f"Fin de partie {i+1}: victoire_ia1={victoire_ia1}, victoire_ia2={victoire_ia2}, parties nules={parties_nuls}"),
+#     print("\nRésultats finaux :")
+#     print(f"Victoires IA1 ({mon_joueur_a}): {victoire_ia1}")
+#     print(f"Victoires IA2 ({mon_joueur_b}): {victoire_ia2}")
+#     print(f"Matchs nuls : {parties_nuls}")
+#     return victoire_ia1, victoire_ia2, parties_nuls
